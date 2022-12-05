@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Books</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+
+<body>
+<div class="d-flex m-2">
+    <div sec:authorize="isAuthenticated()" class="font-weight-bold p-2" style="margin-left: 204px !important;"> Xin chào, <span th:text="${#authentication.getPrincipal().getUsername()}"></span></div>
+    <a sec:authorize="!isAuthenticated()" class="btn btn-success m-1" href="/login" style="margin-left: 204px !important; background-color: darkcyan">Đăng nhập</a>
+    <a sec:authorize="!isAuthenticated()" class="btn btn-primary m-1" href="/registration" style="background-color: darkcyan">Đăng ký</a>
+    <a sec:authorize="isAuthenticated()" th:href="@{/logout}" class="btn btn btn-primary" style="height: 38px;margin: 0.25rem; background-color: white; margin-right: 204px !important; background-color: lightseagreen">Đăng xuất</a>
+</div>
+<div class="container">
+    <div class="row" style="justify-content: center;">
+        <h1 style="color: red; font-weight: bold">Danh sách Book</h1>
+    </div>
+    <a sec:authorize="isAuthenticated()" th:href="@{books/{id}(id = -1)}" class="btn btn-success col-lg-12"
+       style="width: 225px;float: left;margin-bottom: 20px;color: white; background-color: darkcyan">Thêm
+        sách</a>
+    <table class="table table-secondary  table-hover table-striped table-bordered">
+        <thead class="table-dark">
+        <tr>
+            <th class="w-25 text-center">Title</th>
+            <th class="w-15 text-center">Author</th>
+            <th class="w-15 text-center">Category</th>
+            <th class="w-15 text-center">Release Date</th>
+            <th class="w-5 text-center">Page</th>
+            <th class="w-15 text-center">Image</th>
+            <th class="w-25 text-center">Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="book: ${books}">
+            <td th:text="${book.title}"></td>
+            <td th:text="${book.author}"></td>
+            <td th:text="${book.category}"></td>
+            <td th:text="${book.releaseDate}"></td>
+            <td th:text="${book.nOP}"></td>
+            <td><img th:src="${'./upload/' + book.cover}" width="50" height="40"></td>
+            <td sec:authorize="isAuthenticated()" style="text-align: center">
+                <a th:href="@{books/{id}(id = ${book.id})}" class="btn btn-success" style="background-color: darkcyan">View</a>
+                <a th:href="@{books/delete/{id}(id = ${book.id})}" class="btn btn-danger"
+                   onclick="return confirm('Are you sure?')">Delete</a> </td>
+            <td sec:authorize="!isAuthenticated()"> </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+
+</html>
